@@ -28,9 +28,6 @@
             transition: all 0.3s ease;
         }
 
-        .jar-container:hover { box-shadow: 0 25px 60px rgba(251, 113, 133, 0.3); }
-        .jar-container:active { transform: scale(0.98); }
-
         .jar-lid {
             position: absolute;
             top: -20px;
@@ -40,19 +37,16 @@
             height: 40px;
             background: #be123c;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             z-index: 20;
         }
 
         .heart {
             position: absolute;
             font-size: 1.5rem;
-            cursor: help;
+            cursor: pointer;
             transition: transform 0.3s ease;
             user-select: none;
         }
-
-        .heart:hover { transform: scale(1.5) !important; }
 
         .modal {
             display: none;
@@ -67,27 +61,21 @@
         }
 
         .modal.active { display: flex; animation: fadeIn 0.4s ease; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .music-bar { width: 4px; background: #fb7185; border-radius: 2px; height: 10px; }
         .animate-bounce-slow { animation: bounceCustom 0.6s infinite alternate; }
-
         @keyframes bounceCustom { from { height: 6px; } to { height: 18px; } }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fee2e2; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-        <!-- Reproductor oculto -->
         <video id="bgMusic" loop style="display:none;" playsinline></video>
 
-        <header class="mb-10 animate-fadeIn">
-            <h1 id="greeting" class="text-4xl md:text-5xl font-serif italic mb-2">Cargando...</h1>
-            <p id="subHeader" class="text-rose-400 font-light tracking-widest text-sm uppercase"></p>
+        <header class="mb-10">
+            <h1 id="greeting" class="text-4xl md:text-5xl font-serif italic mb-2">Hola, mi vida</h1>
+            <p id="subHeader" class="text-rose-400 font-light tracking-widest text-sm uppercase">Un rincón solo para nosotros</p>
         </header>
 
         <div class="jar-container w-64 h-[380px] md:w-72 md:h-[420px]" id="jar">
@@ -102,221 +90,128 @@
         </div>
 
         <form id="motivoForm" class="mt-12 w-full max-w-xs relative">
-            <input type="text" id="motivoInput" placeholder="" 
-                class="w-full bg-white border-2 border-rose-100 px-6 py-4 rounded-full shadow-sm outline-none focus:border-rose-300 transition-all text-rose-900">
+            <input type="text" id="motivoInput" placeholder="Escribe un motivo..." 
+                class="w-full bg-white border-2 border-rose-100 px-6 py-4 rounded-full shadow-sm outline-none focus:border-rose-300 text-rose-900">
             <button type="submit" class="absolute right-2 top-2 bg-rose-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
             </button>
         </form>
 
-        <!-- Botón de Configuración Musical -->
-        <button id="openConfig" class="fixed bottom-8 right-8 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-rose-500 hover:bg-rose-50 transition-colors z-40 border border-rose-50">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+        <button id="openConfig" class="fixed bottom-8 right-8 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-rose-500 hover:bg-rose-50 z-40 border border-rose-50">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
         </button>
     </div>
 
-    <!-- Modal de Configuración -->
     <div id="configModal" class="modal">
-        <div class="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-sm text-left border-t-8 border-rose-300" onclick="event.stopPropagation()">
-            <div class="flex items-center gap-2 mb-4">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-rose-800"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-                <h3 id="configTitle" class="text-xl font-serif italic text-rose-800"></h3>
-            </div>
-            
-            <form id="musicForm" class="mb-6 flex gap-2">
-                <input type="text" id="musicInput" placeholder="" 
-                    class="flex-1 border-b-2 border-rose-50 py-2 outline-none focus:border-rose-400 text-xs text-rose-900">
-                <button type="submit" id="addMusicBtn" class="text-rose-500 font-bold text-xs p-2"></button>
+        <div class="bg-white p-8 rounded-[40px] shadow-2xl w-full max-w-sm" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-serif italic text-rose-800 mb-4">Nuestra Música</h3>
+            <form id="musicForm" class="mb-4 flex gap-2">
+                <input type="text" id="musicInput" placeholder="Enlace .mp3" class="flex-1 border-b border-rose-100 py-2 text-xs">
+                <button type="submit" class="text-rose-500 text-xs font-bold">AÑADIR</button>
             </form>
-
-            <div id="musicList" class="max-h-40 overflow-y-auto space-y-2 pr-2 custom-scrollbar"></div>
-            
-            <div class="mt-6 text-center">
-                <button onclick="closeConfig()" id="closeConfigBtn" class="text-rose-300 text-xs uppercase tracking-widest font-bold"></button>
-            </div>
+            <div id="musicList" class="max-h-40 overflow-y-auto space-y-2"></div>
+            <button onclick="closeConfig()" class="mt-4 text-rose-300 text-xs w-full">CERRAR</button>
         </div>
     </div>
 
-    <!-- Modal de Mensaje -->
     <div id="modal" class="modal">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl text-center max-w-xs border-t-8 border-rose-400" onclick="event.stopPropagation()">
-            <div class="text-rose-200 mb-6">
-                <svg class="mx-auto" width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </div>
-            <p id="modalText" class="text-2xl text-rose-900 font-serif italic leading-snug"></p>
-            <button onclick="closeModal()" id="closeModalBtn" class="mt-10 text-rose-400 hover:text-rose-600 font-medium text-sm tracking-widest uppercase outline-none"></button>
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl text-center max-w-xs" onclick="event.stopPropagation()">
+            <p id="modalText" class="text-2xl text-rose-900 font-serif italic"></p>
+            <button onclick="closeModal()" class="mt-8 text-rose-400 text-sm uppercase">Cerrar</button>
         </div>
     </div>
 
     <script type="module">
-        // ==========================================
-        // CONFIGURACIÓN DE TEXTOS (Modifica aquí)
-        // ==========================================
-        const TEXTS = {
-            greetingMorning: "Buenos días, amor",
-            greetingAfternoon: "Hola, mi vida",
-            greetingNight: "Buenas noches, cielo",
-            subHeader: "Un rincón solo para nosotros",
-            inputMotivoPlaceholder: "Escribe un motivo...",
-            configTitle: "Nuestra Música",
-            inputMusicPlaceholder: "Enlace .mp3 o .mp4",
-            addBtn: "AÑADIR",
-            closeBtn: "Cerrar",
-            modalCloseBtn: "Cerrar"
-        };
-        // ==========================================
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // Estas variables se inyectan automáticamente en el entorno, pero para GitHub
-        // asegúrate de que el código de Firebase sea el correcto.
+        // Obtener configuración de las variables de entorno
         const firebaseConfig = JSON.parse(__firebase_config);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'nuestro-rincon';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         const video = document.getElementById('bgMusic');
-        video.volume = 0.5; // Volumen al 50%
+        video.volume = 0.5;
 
         let playlist = [];
-        let currentIdx = 0;
         let isPlaying = false;
-        let currentUser = null;
+        let user = null;
 
-        const applyTexts = () => {
-            const hour = new Date().getHours();
-            const greetingEl = document.getElementById('greeting');
-            if (hour < 12) greetingEl.innerText = TEXTS.greetingMorning;
-            else if (hour < 20) greetingEl.innerText = TEXTS.greetingAfternoon;
-            else greetingEl.innerText = TEXTS.greetingNight;
-
-            document.getElementById('subHeader').innerText = TEXTS.subHeader;
-            document.getElementById('motivoInput').placeholder = TEXTS.inputMotivoPlaceholder;
-            document.getElementById('configTitle').innerText = TEXTS.configTitle;
-            document.getElementById('musicInput').placeholder = TEXTS.inputMusicPlaceholder;
-            document.getElementById('addMusicBtn').innerText = TEXTS.addBtn;
-            document.getElementById('closeConfigBtn').innerText = TEXTS.closeBtn;
-            document.getElementById('closeModalBtn').innerText = TEXTS.modalCloseBtn;
-        };
-
-        const init = async () => {
-            applyTexts();
-            
-            // Iniciar sesión
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                currentUser = user;
-                if (user) setupListeners();
-            });
-        };
-
-        const setupListeners = () => {
-            // Escuchar Motivos (Colección Pública)
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'motivos'), (snapshot) => {
-                const space = document.getElementById('heartsSpace');
-                space.innerHTML = '';
-                snapshot.docs.forEach(doc => {
-                    const data = doc.data();
-                    createHeart(data.texto, data.x, data.y, data.color, data.rotation);
-                });
-            }, (err) => console.error(err));
-
-            // Escuchar Playlist (Colección Pública)
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'playlist'), (snapshot) => {
-                playlist = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
-                renderPlaylist();
-                if (playlist.length > 0 && !video.src) {
-                    video.src = playlist[0].url;
+        // Inicialización de Autenticación (REGLA 3)
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
                 }
-            }, (err) => console.error(err));
+            } catch (error) {
+                console.error("Error en la autenticación inicial:", error);
+            }
         };
 
-        init();
+        // Escuchar cambios de estado de autenticación
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (user) {
+                setupListeners();
+            }
+        });
 
-        function createHeart(texto, x, y, color, rotation) {
+        // Configuración de Listeners con manejo de errores (REGLA 1 y 2)
+        function setupListeners() {
+            if (!user) return;
+
+            // Motivos - Ruta específica requerida por REGLA 1
+            const motivosCol = collection(db, 'artifacts', appId, 'public', 'data', 'motivos');
+            onSnapshot(motivosCol, 
+                (snapshot) => {
+                    const space = document.getElementById('heartsSpace');
+                    space.innerHTML = '';
+                    snapshot.docs.forEach(doc => {
+                        const data = doc.data();
+                        createHeart(data.texto, data.x, data.y, data.color);
+                    });
+                },
+                (error) => console.error("Error en motivos snapshot:", error)
+            );
+
+            // Playlist - Ruta específica requerida por REGLA 1
+            const playlistCol = collection(db, 'artifacts', appId, 'public', 'data', 'playlist');
+            onSnapshot(playlistCol, 
+                (snapshot) => {
+                    playlist = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
+                    if (playlist.length > 0 && !video.src) video.src = playlist[0].url;
+                    renderPlaylist();
+                },
+                (error) => console.error("Error en playlist snapshot:", error)
+            );
+        }
+
+        function createHeart(texto, x, y, color) {
             const el = document.createElement('div');
             el.className = 'heart animate-float';
             el.innerHTML = '❤️';
             el.style.left = `${x}%`;
             el.style.top = `${y}%`;
             el.style.color = color || '#f43f5e';
-            el.style.transform = `rotate(${rotation || 0}deg)`;
             el.onclick = (e) => {
                 e.stopPropagation();
                 openModal(texto);
-                if (!isPlaying) toggleMusic(true);
             };
             document.getElementById('heartsSpace').appendChild(el);
         }
-
-        function toggleMusic(forcePlay = false) {
-            if (playlist.length === 0) return;
-            if (forcePlay || !isPlaying) {
-                video.play().then(() => {
-                    isPlaying = true;
-                    document.getElementById('musicIndicator').style.opacity = '1';
-                }).catch(() => {});
-            } else {
-                video.pause();
-                isPlaying = false;
-                document.getElementById('musicIndicator').style.opacity = '0';
-            }
-        }
-
-        video.onended = () => {
-            currentIdx = (currentIdx + 1) % playlist.length;
-            if (playlist[currentIdx]) {
-                video.src = playlist[currentIdx].url;
-                video.play();
-            }
-        };
-
-        document.getElementById('jar').onclick = () => toggleMusic();
-
-        document.getElementById('motivoForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const input = document.getElementById('motivoInput');
-            if (!input.value.trim() || !currentUser) return;
-
-            const colors = ['#f43f5e', '#fb7185', '#fda4af', '#e11d48'];
-            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'motivos'), {
-                texto: input.value,
-                x: 15 + Math.random() * 70,
-                y: 20 + Math.random() * 65,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                rotation: Math.random() * 40 - 20,
-                createdAt: serverTimestamp()
-            });
-            input.value = '';
-            if (!isPlaying) toggleMusic(true);
-        };
-
-        document.getElementById('musicForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const input = document.getElementById('musicInput');
-            if (!input.value.trim() || !currentUser) return;
-            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'playlist'), {
-                url: input.value,
-                createdAt: serverTimestamp()
-            });
-            input.value = '';
-        };
 
         function renderPlaylist() {
             const list = document.getElementById('musicList');
             list.innerHTML = '';
             playlist.forEach((item) => {
                 const div = document.createElement('div');
-                div.className = "flex items-center gap-2 p-2 rounded-xl bg-rose-50/50 text-[10px] text-rose-800 animate-fadeIn";
+                div.className = "flex items-center gap-2 p-2 rounded-xl bg-rose-50/50 text-[10px] text-rose-800";
                 div.innerHTML = `
                     <span class="flex-1 truncate">${item.url}</span>
                     <button class="text-rose-300 hover:text-rose-600" onclick="deleteSong('${item.id}')">✕</button>
@@ -326,25 +221,59 @@
         }
 
         window.deleteSong = async (id) => {
-            if (!currentUser) return;
-            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'playlist', id));
+            if (!user) return;
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'playlist', id));
+            } catch (e) {
+                console.error("Error al borrar canción:", e);
+            }
         };
 
         function openModal(text) {
             document.getElementById('modalText').innerText = text;
             document.getElementById('modal').classList.add('active');
         }
-        window.closeModal = () => document.getElementById('modal').classList.remove('active');
 
-        document.getElementById('openConfig').onclick = () => document.getElementById('configModal').classList.add('active');
+        window.closeModal = () => document.getElementById('modal').classList.remove('active');
         window.closeConfig = () => document.getElementById('configModal').classList.remove('active');
-        
-        window.onclick = (e) => {
-            if (e.target.classList.contains('modal')) {
-                closeModal();
-                closeConfig();
+        document.getElementById('openConfig').onclick = () => document.getElementById('configModal').classList.add('active');
+
+        document.getElementById('motivoForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('motivoInput');
+            if (!input.value.trim() || !user) return;
+            
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'motivos'), {
+                    texto: input.value,
+                    x: 10 + Math.random() * 80,
+                    y: 15 + Math.random() * 70,
+                    color: '#f43f5e',
+                    createdAt: serverTimestamp()
+                });
+                input.value = '';
+            } catch (e) {
+                console.error("Error al añadir motivo:", e);
             }
         };
+
+        document.getElementById('musicForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('musicInput');
+            if (!input.value.trim() || !user) return;
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'playlist'), {
+                    url: input.value,
+                    createdAt: serverTimestamp()
+                });
+                input.value = '';
+            } catch (e) {
+                console.error("Error al añadir música:", e);
+            }
+        };
+
+        // Arrancar autenticación
+        initAuth();
     </script>
 </body>
 </html>
