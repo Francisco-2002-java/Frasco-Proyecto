@@ -24,7 +24,6 @@
             box-shadow: 0 20px 50px rgba(251, 113, 133, 0.2);
             backdrop-filter: blur(8px);
             position: relative;
-            transition: all 0.3s ease;
         }
 
         .jar-lid {
@@ -37,7 +36,6 @@
             background: #be123c;
             border-radius: 12px;
             z-index: 20;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .heart {
@@ -46,9 +44,8 @@
             cursor: pointer;
             transition: transform 0.2s;
             user-select: none;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
-        .heart:hover { transform: scale(1.3) rotate(10deg); }
+        .heart:hover { transform: scale(1.3); }
 
         .modal {
             display: none;
@@ -61,103 +58,91 @@
             justify-content: center;
             padding: 20px;
         }
-
         .modal.active { display: flex; }
-        
-        .music-bar { width: 4px; background: #fb7185; border-radius: 2px; height: 10px; }
-        .animate-bounce-slow { animation: bounceCustom 0.6s infinite alternate; }
-        @keyframes bounceCustom { from { height: 6px; } to { height: 18px; } }
     </style>
 </head>
 <body>
 
     <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-        <!-- Usaremos un audio simple para máxima compatibilidad -->
         <audio id="audioElement" loop></audio>
 
         <header class="mb-8">
             <h1 id="greeting" class="text-4xl md:text-5xl font-serif italic mb-2 text-rose-800">Hola, mi vida</h1>
-            <p class="text-rose-400 font-light tracking-widest text-xs uppercase">Un rincón de nosotros</p>
+            <p class="text-rose-400 font-light tracking-widest text-xs uppercase">Conectado a nuestro frasco real</p>
         </header>
 
         <div class="jar-container w-64 h-[380px] md:w-72 md:h-[420px]" id="jar">
             <div class="jar-lid"></div>
-            <div id="heartsSpace" class="relative w-full h-full overflow-hidden p-6">
-                <!-- Los corazones se generan aquí -->
-            </div>
-            
-            <div id="musicIndicator" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-1 items-end opacity-0 transition-opacity duration-500">
-                <div class="music-bar animate-bounce-slow"></div>
-                <div class="music-bar animate-bounce-slow" style="animation-delay: 0.2s"></div>
-                <div class="music-bar animate-bounce-slow" style="animation-delay: 0.4s"></div>
-            </div>
+            <div id="heartsSpace" class="relative w-full h-full overflow-hidden p-6"></div>
         </div>
 
         <form id="motivoForm" class="mt-8 w-full max-w-xs relative">
-            <input type="text" id="motivoInput" placeholder="Escribe algo lindo..." 
-                class="w-full bg-white/80 border-2 border-rose-100 px-6 py-4 rounded-full shadow-sm outline-none focus:border-rose-300 text-rose-900 transition-all">
-            <button type="submit" class="absolute right-2 top-2 bg-rose-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-rose-600 active:scale-95 transition-all">
+            <input type="text" id="motivoInput" placeholder="Escribe algo para siempre..." 
+                class="w-full bg-white/80 border-2 border-rose-100 px-6 py-4 rounded-full shadow-sm outline-none focus:border-rose-300 text-rose-900">
+            <button type="submit" class="absolute right-2 top-2 bg-rose-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
             </button>
         </form>
 
         <div class="fixed bottom-6 right-6 flex flex-col gap-3">
-            <button id="toggleMusic" class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-rose-500 hover:bg-rose-50 border border-rose-100">
-                <svg id="musicIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle>
-                </svg>
+            <button id="toggleMusic" class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-rose-500 border border-rose-100">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
             </button>
-            <button id="openConfig" class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-rose-300 hover:text-rose-500 border border-rose-100">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- Modales -->
-    <div id="configModal" class="modal" onclick="closeConfig()">
-        <div class="bg-white p-8 rounded-[30px] shadow-2xl w-full max-w-sm" onclick="event.stopPropagation()">
-            <h3 class="text-lg font-serif italic text-rose-800 mb-4 text-center">Ajustes del Frasco</h3>
-            <p class="text-[10px] text-rose-300 mb-2 uppercase tracking-widest">Enlace de música (.mp3)</p>
-            <div class="flex gap-2">
-                <input type="text" id="musicUrl" placeholder="https://ejemplo.com/musica.mp3" class="flex-1 border-b border-rose-100 py-2 text-xs outline-none focus:border-rose-300">
-                <button id="saveMusic" class="bg-rose-500 text-white px-4 py-2 rounded-lg text-xs font-bold">GUARDAR</button>
-            </div>
-            <button onclick="closeConfig()" class="mt-6 text-rose-200 text-[10px] w-full text-center uppercase tracking-widest">Cerrar</button>
         </div>
     </div>
 
     <div id="msgModal" class="modal" onclick="closeMsg()">
         <div class="bg-white p-10 rounded-[40px] shadow-2xl text-center max-w-xs border-t-8 border-rose-400" onclick="event.stopPropagation()">
-            <div class="text-rose-100 mb-4">
-                <svg class="mx-auto" width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </div>
             <p id="msgText" class="text-xl text-rose-900 font-serif italic"></p>
-            <button onclick="closeMsg()" class="mt-8 text-rose-300 text-xs font-bold uppercase tracking-widest">Cerrar</button>
+            <button onclick="closeMsg()" class="mt-8 text-rose-300 text-xs font-bold uppercase">Cerrar</button>
         </div>
     </div>
 
-    <script>
-        // --- Lógica del Frasco ---
-        const space = document.getElementById('heartsSpace');
-        const audio = document.getElementById('audioElement');
-        const musicIndicator = document.getElementById('musicIndicator');
-        const musicIcon = document.getElementById('musicIcon');
-        
-        // Cargar datos guardados
-        let motivos = JSON.parse(localStorage.getItem('misMotivos')) || [];
-        let musicUrl = localStorage.getItem('miMusica') || "";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        function init() {
-            // Cargar motivos existentes
-            motivos.forEach(m => createHeartUI(m));
-            if (musicUrl) audio.src = musicUrl;
+        // Variables globales inyectadas por el entorno
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'mi-frasco-eterno';
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // 1. Autenticación (REGLA 3)
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                startSync();
+            }
+        });
+
+        // 2. Sincronización en tiempo real (REGLA 1: Rutas estrictas)
+        function startSync() {
+            // Usamos la ruta pública definida en las reglas: /artifacts/{appId}/public/data/{collection}
+            const motivosRef = collection(db, 'artifacts', appId, 'public', 'data', 'motivos');
             
-            // Saludo según hora
-            const hr = new Date().getHours();
-            const g = document.getElementById('greeting');
-            if(hr < 12) g.innerText = "Buenos días, amor";
-            else if(hr < 20) g.innerText = "Hola, mi vida";
-            else g.innerText = "Buenas noches, cielo";
+            onSnapshot(motivosRef, (snapshot) => {
+                const space = document.getElementById('heartsSpace');
+                space.innerHTML = '';
+                snapshot.docs.forEach(doc => {
+                    createHeartUI(doc.data());
+                });
+            }, (error) => {
+                console.error("Error en Firestore:", error);
+            });
         }
 
         function createHeartUI(data) {
@@ -166,66 +151,36 @@
             el.innerHTML = '❤️';
             el.style.left = data.x + '%';
             el.style.top = data.y + '%';
-            el.style.animationDelay = Math.random() * 2 + 's';
-            el.onclick = () => openMsg(data.texto);
-            space.appendChild(el);
+            el.onclick = () => {
+                document.getElementById('msgText').innerText = data.texto;
+                document.getElementById('msgModal').classList.add('active');
+            };
+            document.getElementById('heartsSpace').appendChild(el);
         }
 
-        document.getElementById('motivoForm').onsubmit = (e) => {
+        // 3. Guardar nuevo motivo
+        document.getElementById('motivoForm').onsubmit = async (e) => {
             e.preventDefault();
             const input = document.getElementById('motivoInput');
             const texto = input.value.trim();
-            if(!texto) return;
+            if(!texto || !currentUser) return;
 
-            const nuevo = {
-                texto: texto,
-                x: 10 + Math.random() * 80,
-                y: 15 + Math.random() * 70
-            };
-
-            motivos.push(nuevo);
-            localStorage.setItem('misMotivos', JSON.stringify(motivos));
-            createHeartUI(nuevo);
-            input.value = '';
-        };
-
-        // Música
-        document.getElementById('toggleMusic').onclick = () => {
-            if(!audio.src) {
-                document.getElementById('configModal').classList.add('active');
-                return;
-            }
-            
-            if (audio.paused) {
-                audio.play().catch(e => console.log("Error play:", e));
-                musicIndicator.style.opacity = "1";
-                musicIcon.style.color = "#be123c";
-            } else {
-                audio.pause();
-                musicIndicator.style.opacity = "0";
-                musicIcon.style.color = "currentColor";
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'motivos'), {
+                    texto: texto,
+                    x: 10 + Math.random() * 80,
+                    y: 15 + Math.random() * 70,
+                    timestamp: serverTimestamp()
+                });
+                input.value = '';
+            } catch (err) {
+                console.error("Error al guardar:", err);
             }
         };
-
-        document.getElementById('saveMusic').onclick = () => {
-            const url = document.getElementById('musicUrl').value.trim();
-            if(url) {
-                localStorage.setItem('miMusica', url);
-                audio.src = url;
-                closeConfig();
-            }
-        };
-
-        function openMsg(txt) {
-            document.getElementById('msgText').innerText = txt;
-            document.getElementById('msgModal').classList.add('active');
-        }
 
         window.closeMsg = () => document.getElementById('msgModal').classList.remove('active');
-        window.closeConfig = () => document.getElementById('configModal').classList.remove('active');
-        document.getElementById('openConfig').onclick = () => document.getElementById('configModal').classList.add('active');
 
-        init();
+        initAuth();
     </script>
 </body>
 </html>
